@@ -10,6 +10,10 @@ h1 {
     font-size: 2.5em;
 }
 
+#search-bar {
+    display: flex;
+}
+
 #game-box-art {
     max-height: 30em;
 }

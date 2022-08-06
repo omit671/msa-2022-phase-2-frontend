@@ -61,20 +61,22 @@ function App() {
         <h1>Board Game Search</h1>
 
         <div>
-          <TextField
-            id="search-bar"
-            className="text"
-            label="Board game name"
-            onChange={async event => setSearchQuery(event.target.value)}
-            style={{ width: 1000 }}
-          />
-          <IconButton
-            onClick={queryAPI}
-            aria-label="search"
-            size="large"
-          >
-            <SearchIcon style={{ fill: "blue" }} id="search-icon" fontSize="inherit" />
-          </IconButton>
+          <div id="search-bar">
+            <TextField
+              id="search-text-box"
+              className="text"
+              label="Board game name"
+              fullWidth
+              onChange={async event => setSearchQuery(event.target.value)}
+            />
+            <IconButton
+              onClick={queryAPI}
+              aria-label="search"
+              size="large"
+            >
+              <SearchIcon style={{ fill: "blue" }} id="search-icon" fontSize="inherit" />
+            </IconButton>
+          </div>
           <br />
           <FormControlLabel control={<Switch onChange={event => setUseExactNameMatching(event.target.checked)} />} label="Match names exactly" />
         </div>
