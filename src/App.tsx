@@ -6,6 +6,7 @@ import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import {FormControlLabel, Switch} from "@mui/material";
+import {decode} from "html-entities";
 
 const BGG_API_BASE_URL = "https://boardgamegeek.com/xmlapi2/";
 
@@ -40,7 +41,7 @@ function App() {
 
         <h2>{ gameName }</h2>
 
-        <p>{ boardGameInfo.description._text }</p>
+        <p id="game-description">{ decode(boardGameInfo.description._text) }</p>
       </div>;
     }
     else
