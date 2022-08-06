@@ -37,7 +37,9 @@ function App() {
       }
 
       renderedBoardGameInfo = <div>
-        <img src={boardGameInfo.image._text!} alt={ `${gameName} Box Art`} width="30%" />
+        <hr />
+
+        <img src={boardGameInfo.image._text!} alt={ `${gameName} Box Art`} id="game-box-art" />
 
         <h2>{ gameName }</h2>
 
@@ -68,8 +70,10 @@ function App() {
           />
           <IconButton
             onClick={queryAPI}
-            aria-label="search">
-            <SearchIcon style={{ fill: "green" }} id="search-icon" />
+            aria-label="search"
+            size="large"
+          >
+            <SearchIcon style={{ fill: "green" }} id="search-icon" fontSize="inherit" />
           </IconButton>
           <br />
           <FormControlLabel control={<Switch onChange={event => setUseExactNameMatching(event.target.checked)} />} label="Match names exactly" />
