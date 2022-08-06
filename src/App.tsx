@@ -11,24 +11,44 @@ const BGG_API_BASE_URL = "https://boardgamegeek.com/xmlapi2/";
 function App() {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const [boardGameInfo, setBoardGameInfo] = useState<undefined | any>(undefined);
+  // Store the previous search query so error messages don't change when editing the search box
+  const [previousSearchQuery, setPreviousSearchQuery] = useState("");
 
-  let gameName;
+  const [boardGameInfo, setBoardGameInfo] = useState<undefined | null | any>(undefined);
+
+  let renderedBoardGameInfo;
 
   if (boardGameInfo !== undefined)
   {
-    if (boardGameInfo.name instanceof Array)
+    if (boardGameInfo !== null)
     {
-      gameName = (boardGameInfo.name as Array<any>).find(name => name._attributes.type === "primary")._attributes.value;
+      let gameName;
+
+      if (boardGameInfo.name instanceof Array)
+      {
+        gameName = (boardGameInfo.name as Array<any>).find(name => name._attributes.type === "primary")._attributes.value;
+      }
+      else
+      {
+        gameName = boardGameInfo.name._attributes.value;
+      }
+
+      renderedBoardGameInfo = <div>
+        <img src={boardGameInfo.image._text!} alt={ `${gameName} Box Art`} width="30%" />
+
+        <h2>{ gameName }</h2>
+
+        <p>{ boardGameInfo.description._text }</p>
+      </div>;
     }
     else
     {
-      gameName = boardGameInfo.name._attributes.value;
+      renderedBoardGameInfo = <p>No such board game with name: { previousSearchQuery }</p>;
     }
   }
   else
   {
-    gameName = undefined;
+    renderedBoardGameInfo = undefined;
   }
 
   return (
@@ -50,38 +70,37 @@ function App() {
           <SearchIcon style={{ fill: "green" }} />
         </div>
 
-        { boardGameInfo !== undefined ? (
-            <div>
-              <img src={boardGameInfo.image._text!} alt={ `${gameName} Box Art`} width="30%" />
-
-              <h2>{ gameName }</h2>
-
-              <p>{ boardGameInfo.description._text }</p>
-            </div>
-        ) : (
-            <p>No such board game with name: { searchQuery }</p>
-        )}
+        { renderedBoardGameInfo }
       </div>
   );
 
   async function queryAPI() {
+    setPreviousSearchQuery(searchQuery);
+
+    if (searchQuery.length === 0)
+    {
+      setBoardGameInfo(undefined);
+      return;
+    }
+
     let boardGameID;
 
-    try
     {
       const searchResponse = await axios.get(`${BGG_API_BASE_URL}search?query=${searchQuery.replace(" ", "+")}`);
 
-      const data = parseXML(searchResponse.data);
+      const data = parseXML(searchResponse.data).items.item;
 
       console.log(data);
 
-      boardGameID = data.items.item[0]._attributes.id;
-    }
-    catch (error)
-    {
-      setBoardGameInfo(undefined);
-
-      throw error;
+      if (data !== undefined)
+      {
+        boardGameID = data[0]._attributes.id;
+      }
+      else
+      {
+        setBoardGameInfo(null);
+        return;
+      }
     }
 
     {
