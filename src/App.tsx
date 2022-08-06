@@ -73,7 +73,7 @@ function App() {
             aria-label="search"
             size="large"
           >
-            <SearchIcon style={{ fill: "green" }} id="search-icon" fontSize="inherit" />
+            <SearchIcon style={{ fill: "blue" }} id="search-icon" fontSize="inherit" />
           </IconButton>
           <br />
           <FormControlLabel control={<Switch onChange={event => setUseExactNameMatching(event.target.checked)} />} label="Match names exactly" />
