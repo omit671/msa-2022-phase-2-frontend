@@ -6,10 +6,10 @@ import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 
-const BGG_THING_API_URL = "https://boardgamegeek.com/xmlapi2/thing";
+const BGG_API_BASE_URL = "https://boardgamegeek.com/xmlapi2/";
 
 function App() {
-  const [boardGameID, setBoardGameID] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const [boardGameInfo, setBoardGameInfo] = useState<undefined | any>(undefined);
 
@@ -40,7 +40,7 @@ function App() {
             id="search-bar"
             className="text"
             label="Board game name"
-            onChange={async event => setBoardGameID(event.target.value)}
+            onChange={async event => setSearchQuery(event.target.value)}
             style={{ width: 1000 }}
           />
           <IconButton
@@ -59,23 +59,23 @@ function App() {
               <p>{ boardGameInfo.description._text }</p>
             </div>
         ) : (
-            <p>No such board game with id { boardGameID }</p>
+            <p>No such board game with name: { searchQuery }</p>
         )}
       </div>
   );
 
   async function queryAPI() {
+    let boardGameID;
+
     try
     {
-      const response = await axios.get(BGG_THING_API_URL + "?id=" + boardGameID);
+      const searchResponse = await axios.get(`${BGG_API_BASE_URL}search?query=${searchQuery.replace(" ", "+")}`);
 
-      const data = JSON.parse(xml2json(response.data, {compact: true}));
+      const data = parseXML(searchResponse.data);
 
-      const itemData = data.items.item;
+      console.log(data);
 
-      console.log(itemData);
-
-      setBoardGameInfo(itemData);
+      boardGameID = data.items.item[0]._attributes.id;
     }
     catch (error)
     {
@@ -83,7 +83,22 @@ function App() {
 
       throw error;
     }
+
+    {
+      // Note: order of the parameters is important
+      const infoResponse = await axios.get(`${BGG_API_BASE_URL}thing?id=${boardGameID}`);
+
+      const data = JSON.parse(xml2json(infoResponse.data, {compact: true})).items.item;
+
+      console.log(data);
+
+      setBoardGameInfo(data);
+    }
   }
+}
+
+function parseXML(xml: string): any {
+  return JSON.parse(xml2json(xml, {compact: true}));
 }
 
 export default App;
