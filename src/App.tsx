@@ -86,7 +86,7 @@ function App() {
     let boardGameID;
 
     {
-      const searchResponse = await axios.get(`${BGG_API_BASE_URL}search?query=${searchQuery.replace(" ", "+")}`);
+      const searchResponse = await axios.get(`${BGG_API_BASE_URL}search?query=${searchQuery.replace(" ", "+")}&type=boardgame,boardgameexpansion`);
 
       const data = parseXML(searchResponse.data).items.item;
 
@@ -105,7 +105,7 @@ function App() {
 
     {
       // Note: order of the parameters is important
-      const infoResponse = await axios.get(`${BGG_API_BASE_URL}thing?id=${boardGameID}`);
+      const infoResponse = await axios.get(`${BGG_API_BASE_URL}thing?id=${boardGameID}&type=boardgame,boardgameexpansion`);
 
       const data = JSON.parse(xml2json(infoResponse.data, {compact: true})).items.item;
 
