@@ -68,9 +68,9 @@ function App() {
           />
           <IconButton
             onClick={queryAPI}
-            aria-label="search"
-          />
-          <SearchIcon style={{ fill: "green" }} />
+            aria-label="search">
+            <SearchIcon style={{ fill: "green" }} id="search-icon" />
+          </IconButton>
           <br />
           <FormControlLabel control={<Switch onChange={event => setUseExactNameMatching(event.target.checked)} />} label="Match names exactly" />
         </div>
