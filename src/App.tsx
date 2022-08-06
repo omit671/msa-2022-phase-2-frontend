@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './App.css';
 import axios from "axios";
+import {xml2json} from "xml-js";
 
 const BGG_THING_API_URL = "https://boardgamegeek.com/xmlapi2/thing";
 
@@ -29,7 +30,11 @@ function App() {
   async function queryAPI() {
     const response = await axios.get(BGG_THING_API_URL + "?id=" + boardGameID);
 
-    console.log(response.data);
+    const data = JSON.parse(xml2json(response.data, {compact: true}));
+
+    const itemData = data.items.item;
+
+    console.log(itemData);
   }
 }
 
