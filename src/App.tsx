@@ -12,7 +12,7 @@ const BGG_API_BASE_URL = "https://boardgamegeek.com/xmlapi2/";
 
 function App() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [useExactNameMatching, setUseExactNameMatching] = useState(false);
+  const [useStricterNameMatching, setUseStricterNameMatching] = useState(false);
 
   // Store the previous search query so error messages don't change when editing the search box
   const [previousSearchQuery, setPreviousSearchQuery] = useState("");
@@ -78,7 +78,7 @@ function App() {
             </IconButton>
           </div>
           <br />
-          <FormControlLabel control={<Switch onChange={event => setUseExactNameMatching(event.target.checked)} />} label="Match names exactly" />
+          <FormControlLabel control={<Switch onChange={event => setUseStricterNameMatching(event.target.checked)} />} label="Use stricter name matching" />
         </div>
 
         { renderedBoardGameInfo }
@@ -116,7 +116,7 @@ function App() {
 
     {
       // Note: order of the parameters is important
-      const infoResponse = await axios.get(`${BGG_API_BASE_URL}thing?id=${boardGameID}&type=boardgame,boardgameexpansion,exact=${useExactNameMatching ? 1 : 0}`);
+      const infoResponse = await axios.get(`${BGG_API_BASE_URL}thing?id=${boardGameID}&type=boardgame,boardgameexpansion,exact=${useStricterNameMatching ? 1 : 0}`);
 
       const data = JSON.parse(xml2json(infoResponse.data, {compact: true})).items.item;
 
