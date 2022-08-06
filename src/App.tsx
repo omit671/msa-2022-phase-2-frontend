@@ -2,6 +2,9 @@ import { useState } from 'react';
 import './App.css';
 import axios from "axios";
 import {xml2json} from "xml-js";
+import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import SearchIcon from "@mui/icons-material/Search";
 
 const BGG_THING_API_URL = "https://boardgamegeek.com/xmlapi2/thing";
 
@@ -33,21 +36,23 @@ function App() {
         <h1>Board Game Search</h1>
 
         <div>
-          <label>Board Game ID</label>
-          <br />
-          <input
-              type="text"
-              id="board-game-id"
-              name="board-game-name"
-              onChange={async event => setBoardGameID(event.target.value)}
+          <TextField
+            id="search-bar"
+            className="text"
+            label="Board game name"
+            onChange={async event => setBoardGameID(event.target.value)}
+            style={{ width: 1000 }}
           />
-          <br />
-          <button onClick={queryAPI}>Search</button>
+          <IconButton
+            onClick={queryAPI}
+            aria-label="search"
+          />
+          <SearchIcon style={{ fill: "green" }} />
         </div>
 
         { boardGameInfo !== undefined ? (
             <div>
-              <img src={boardGameInfo.image._text!} alt={ `${gameName} Box Art`} />
+              <img src={boardGameInfo.image._text!} alt={ `${gameName} Box Art`} width="30%" />
 
               <h2>{ gameName }</h2>
 
