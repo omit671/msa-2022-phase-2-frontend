@@ -10,6 +10,24 @@ function App() {
 
   const [boardGameInfo, setBoardGameInfo] = useState<undefined | any>(undefined);
 
+  let gameName;
+
+  if (boardGameInfo !== undefined)
+  {
+    if (boardGameInfo.name instanceof Array)
+    {
+      gameName = (boardGameInfo.name as Array<any>).find(name => name._attributes.type === "primary")._attributes.value;
+    }
+    else
+    {
+      gameName = boardGameInfo.name._attributes.value;
+    }
+  }
+  else
+  {
+    gameName = undefined;
+  }
+
   return (
       <div>
         <h1>Board Game Search</h1>
@@ -29,9 +47,9 @@ function App() {
 
         { boardGameInfo !== undefined ? (
             <div>
-              <img src={boardGameInfo.image._text!} alt={ `${boardGameInfo.name._attributes.value} Box Art`} />
+              <img src={boardGameInfo.image._text!} alt={ `${gameName} Box Art`} />
 
-              <h2>{ boardGameInfo.name._attributes.value }</h2>
+              <h2>{ gameName }</h2>
 
               <p>{ boardGameInfo.description._text }</p>
             </div>
