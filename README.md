@@ -1,3 +1,7 @@
+# MSA 2022 Phase 2 - Frontend
+
+*See also the [backend repo](https://github.com/omit671/msa-2022-phase-2-backend).*
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
