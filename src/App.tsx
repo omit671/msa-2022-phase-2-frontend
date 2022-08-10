@@ -101,8 +101,6 @@ function App() {
 
       const data = parseXML(searchResponse.data).items.item;
 
-      console.log(data);
-
       if (data !== undefined)
       {
         boardGameID = data[0]._attributes.id;
@@ -119,8 +117,6 @@ function App() {
       const infoResponse = await axios.get(`${BGG_API_BASE_URL}thing?id=${boardGameID}&type=boardgame,boardgameexpansion,exact=${useStricterNameMatching ? 1 : 0}`);
 
       const data = JSON.parse(xml2json(infoResponse.data, {compact: true})).items.item;
-
-      console.log(data);
 
       setBoardGameInfo(data);
     }
