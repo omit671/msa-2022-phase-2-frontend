@@ -94,16 +94,24 @@ function App() {
       return;
     }
 
+    // First we retrieve the game ID based on a search string
     let boardGameID;
 
     {
-      const searchResponse = await axios.get(`${BGG_API_BASE_URL}search?query=${searchQuery.replace(" ", "+")}&type=boardgame,boardgameexpansion`);
+      const searchResponse = await axios.get(`${BGG_API_BASE_URL}search?query=${searchQuery.replace(" ", "+")}&type=boardgame,boardgameexpansion,exact=${useStricterNameMatching ? 1 : 0}`);
 
       const data = parseXML(searchResponse.data).items.item;
 
       if (data !== undefined)
       {
-        boardGameID = data[0]._attributes.id;
+        if (useStricterNameMatching)
+        {
+          boardGameID = data.find((game: any) => game.name._attributes.value.toLowerCase() === searchQuery.toLowerCase())._attributes.id;
+        }
+        else
+        {
+          boardGameID = data[0]._attributes.id;
+        }
       }
       else
       {
@@ -112,9 +120,10 @@ function App() {
       }
     }
 
+    // Then we actually retrieve the game's data using its ID
     {
       // Note: order of the parameters is important
-      const infoResponse = await axios.get(`${BGG_API_BASE_URL}thing?id=${boardGameID}&type=boardgame,boardgameexpansion,exact=${useStricterNameMatching ? 1 : 0}`);
+      const infoResponse = await axios.get(`${BGG_API_BASE_URL}thing?id=${boardGameID}&type=boardgame,boardgameexpansion`);
 
       const data = JSON.parse(xml2json(infoResponse.data, {compact: true})).items.item;
 
